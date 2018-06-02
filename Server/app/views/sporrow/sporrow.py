@@ -39,13 +39,14 @@ class SporrowList(BaseResource):
 
         page = int(page)
 
-        return [{
+        return self.unicode_safe_json_dumps([{
             'id': str(sporrow.id),
             'title': sporrow.title,
             'borrowPrice': sporrow.borrow_price_per_day,
             'includeWeekend': sporrow.include_weekend_on_price_calculation,
-            'tradeArea': sporrow.trade_area
-        } for sporrow in SporrowModel.objects.order_by(self.sort_type_args_mapping[sort_type])[(page - 1) * self.pagination_count:page * self.pagination_count]]
+            'tradeArea': sporrow.trade_area,
+            'cartCount': len(sporrow.in_cart)
+        } for sporrow in SporrowModel.objects.order_by(self.sort_type_args_mapping[sort_type])[(page - 1) * self.pagination_count:page * self.pagination_count]])
 
     @auth_required(AccountModel)
     @json_required({'title': str, 'pictures': list, 'borrowPrice': int, 'includeWeekend': bool,
@@ -80,6 +81,7 @@ class SporrowList(BaseResource):
             abort(400)
 
         sporrow = SporrowModel(
+            owner=g.user,
             title=title,
             pictures=pictures,
             borrow_price_per_day=borrow_price_per_day,
