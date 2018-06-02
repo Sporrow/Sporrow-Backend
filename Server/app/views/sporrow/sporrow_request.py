@@ -11,7 +11,20 @@ from app.views import BaseResource, auth_required, json_required
 api = Api(Blueprint(__name__, __name__))
 
 
-@api.resource('/sporrow/<id>/request')
+@api.resource('/sporrow/request')
+class SporrowRequestList(BaseResource):
+    @auth_required(AccountModel)
+    def get(self):
+        """
+        자신이 올린 모든 대여에 대한 제안 상태 조회
+        """
+        return self.unicode_safe_json_dumps([{
+            'id': str(sporrow.id),
+            'requestCount': SporrowRequestModel.objects(sporrow=sporrow).count()
+        } for sporrow in SporrowModel.objects(owner=g.user)])
+
+
+@api.resource('/sporrow/request/<id>')
 class SporrowRequest(BaseResource):
     @auth_required(AccountModel)
     @json_required({'borrowStartDate': str, 'borrowEndDate': str, 'tradeArea': str, 'tradeDate': str, 'tradeTime': str})

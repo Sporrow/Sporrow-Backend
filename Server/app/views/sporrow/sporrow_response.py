@@ -14,7 +14,7 @@ from app.views import BaseResource, auth_required, json_required
 api = Api(Blueprint(__name__, __name__))
 
 
-@api.resource('/sporrow/<id>/response')
+@api.resource('/sporrow/response/<id>')
 class SporrowResponse(BaseResource):
     def post(self, id):
         """
