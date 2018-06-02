@@ -145,7 +145,6 @@ class SporrowContent(BaseResource):
 class SporrowCalendar(BaseResource):
     def __init__(self):
         self.date_format = '{}-{:0>2}-{:0>2}'
-        self.date_format_without_year = '{:0>2}-{:0>2}'
 
         super(SporrowCalendar, self).__init__()
 
@@ -168,8 +167,6 @@ class SporrowCalendar(BaseResource):
 
         last_day_of_month = monthrange(year, month)[1]
 
-        return [{
-            self.date_format_without_year.format(month, day): 1 if self.date_format.format(year, month, day) not in sporrow.borrow_calendar else 0
-        } for day in range(1, last_day_of_month + 1)]
+        return { day: 1 if self.date_format.format(year, month, day) not in sporrow.borrow_calendar else 0 for day in range(1, last_day_of_month + 1) }
         # 1 : 대여 가능한 날
         # 0 : 대여 불가능한 날
