@@ -9,7 +9,6 @@ from app.views import BaseResource
 
 api = Api(Blueprint(__name__, __name__))
 
-
 @api.resource('/interest-list')
 class InterestList(BaseResource):
     def get(self):

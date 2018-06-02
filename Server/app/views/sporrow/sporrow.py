@@ -1,11 +1,13 @@
 from calendar import monthrange
 from datetime import datetime
+
 import re
 
 from flask import Blueprint, Response, abort, g, request
 from flask_restful import Api
 from flasgger import swag_from
 
+from app.docs.sporrow import *
 from app.models.account import AccountModel
 from app.models.interest import MinorInterestModel, MajorInterestModel
 from app.models.sporrow import SporrowModel
@@ -29,6 +31,7 @@ class SporrowList(BaseResource):
         super(SporrowList, self).__init__()
 
     @auth_required(AccountModel)
+    @swag_from(SPORROW_CONTENT_GET)
     def get(self):
         """
         스포츠용품 대여 리스트 조회
@@ -55,6 +58,7 @@ class SporrowList(BaseResource):
     @json_required({'title': str, 'pictures': list, 'borrowPrice': int, 'includeWeekend': bool,
                     'minBorrowDays': int, 'maxBorrowDays': int, 'tradeStartHour': int, 'tradeEndHour': int,
                     'tradeArea': str, 'tradeAreaX': float, 'tradeAreaY': float, 'categories': list})
+    @swag_from(SPORROW_LIST_POST)
     def post(self):
         """
         스포츠용품 업로드
@@ -116,6 +120,7 @@ class SporrowList(BaseResource):
 
 @api.resource('/sporrow/<id>')
 class SporrowContent(BaseResource):
+    @swag_from(SPORROW_CONTENT_GET)
     def get(self, id):
         """
         스포츠용품 대여의 세부 정보 조회
@@ -150,6 +155,7 @@ class SporrowCalendar(BaseResource):
         super(SporrowCalendar, self).__init__()
 
     @auth_required(AccountModel)
+    @swag_from(SPORROW_CALENDAR_GET)
     def get(self, id, year, month):
         """
         스포츠용품 대여의 달력 조회
