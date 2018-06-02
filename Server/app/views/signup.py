@@ -66,3 +66,27 @@ class Signup(BaseResource):
 
         return Response('', 201)
 
+
+@api.resource('/certify/<code>')
+class EmailCertify(BaseResource):
+    def get(self, code):
+        """
+        이메일 인증 URL
+        """
+        redis_client: Redis = current_app.config['REDIS_CLIENT']
+
+        email = redis_client.get(code)
+
+        if not email:
+            abort(401)
+
+        user = AccountModel.objects(email=email).first()
+
+        if not user:
+            abort(401)
+
+        user.update(email_certified=True)
+
+        redis_client.delete(code)
+
+        return Response('Welcome!', 201)
