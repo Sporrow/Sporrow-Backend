@@ -27,7 +27,8 @@ class SporrowModel(Document):
     pictures = ListField()
 
     borrow_price_per_day = IntField(
-        required=True
+        required=True,
+        min_value=0
     )
 
     include_weekend_on_price_calculation = BooleanField(
