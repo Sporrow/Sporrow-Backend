@@ -20,6 +20,8 @@ class AccountModel(Document):
         required=True
     )
 
+    nickname = StringField()
+
 
 class TokenModel(Document):
     meta = {
