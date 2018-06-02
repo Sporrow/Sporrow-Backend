@@ -10,6 +10,7 @@ from redis import Redis
 from werkzeug.security import generate_password_hash
 
 from app.models.account import AccountModel
+from app.models.interest import MajorInterestModel, MinorInterestModel
 from app.views import BaseResource, json_required
 
 api = Api(Blueprint(__name__, __name__))
@@ -30,6 +31,9 @@ def generate_email_certification_code(email):
 @api.resource('/check/<email>')
 class IDDuplicationCheck(BaseResource):
     def get(self, email):
+        """
+        이메일 중복체크
+        """
         if AccountModel.objects(email=email):
             abort(409)
         else:
@@ -40,6 +44,9 @@ class IDDuplicationCheck(BaseResource):
 class Signup(BaseResource):
     @json_required({'email': str, 'pw': str})
     def post(self):
+        """
+        회원가입
+        """
         payload = request.json
 
         email = payload['email']
@@ -72,6 +79,9 @@ class Signup(BaseResource):
 @api.resource('/email-resend/<email>')
 class EmailResend(BaseResource):
     def get(self, email):
+        """
+        이메일 재전송
+        """
         if not AccountModel.objects(email=email):
             return Response('', 204)
 
@@ -87,6 +97,45 @@ class EmailResend(BaseResource):
         )
 
         mail_client.send(msg)
+
+        return Response('', 201)
+
+
+@api.resource('/info/initialize')
+class InitializeInfo(BaseResource):
+    @json_required({'email': str, 'nickname': str, 'categories': list})
+    def post(self):
+        """
+        기본 정보 업로드(초기화)
+        """
+        payload = request.json
+
+        email = payload['email']
+        nickname = payload['nickname']
+        categories = payload['categories']
+
+        user = AccountModel.objects(email=email).first()
+
+        if not user:
+            return Response('', 204)
+
+        if AccountModel.objects(nickname=nickname):
+            abort(409)
+
+        user.nickname = nickname
+
+        for category_id in categories:
+            major_category = MajorInterestModel.objects(id=category_id).first()
+            minor_category = MinorInterestModel.objects(id=category_id).first()
+
+            if major_category:
+                user.major_category_interests.append(major_category)
+            elif minor_category:
+                user.minor_category_interests.append(minor_category)
+            else:
+                abort(400)
+
+        user.save()
 
         return Response('', 201)
 
