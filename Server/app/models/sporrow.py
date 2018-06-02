@@ -103,6 +103,11 @@ class SporrowRequestModel(Document):
         required=True
     )
 
+    sporrow = ReferenceField(
+        document_type=SporrowModel,
+        required=True
+    )
+
     borrow_start_date = StringField(
         required=True
     )
