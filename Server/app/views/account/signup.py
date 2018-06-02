@@ -4,11 +4,13 @@ import random
 from flask import Blueprint, Response, abort, current_app, request
 from flask_mail import Mail, Message
 from flask_restful import Api
+from flasgger import swag_from
 
 from redis import Redis
 
 from werkzeug.security import generate_password_hash
 
+from app.docs.signup import *
 from app.models.account import AccountModel
 from app.models.interest import MajorInterestModel, MinorInterestModel
 from app.views import BaseResource, json_required
@@ -30,6 +32,7 @@ def generate_email_certification_code(email):
 
 @api.resource('/check/<email>')
 class IDDuplicationCheck(BaseResource):
+    @swag_from(ID_DUPLICATION_CHECK_GET)
     def get(self, email):
         """
         이메일 중복체크
@@ -42,6 +45,7 @@ class IDDuplicationCheck(BaseResource):
 
 @api.resource('/signup')
 class Signup(BaseResource):
+    @swag_from(SIGNUP_POST)
     @json_required({'email': str, 'pw': str})
     def post(self):
         """
@@ -78,6 +82,7 @@ class Signup(BaseResource):
 
 @api.resource('/email-resend/<email>')
 class EmailResend(BaseResource):
+    @swag_from(EMAIL_RESEND_GET)
     def get(self, email):
         """
         이메일 재전송
@@ -98,23 +103,26 @@ class EmailResend(BaseResource):
 
         mail_client.send(msg)
 
-        return Response('', 201)
+        return Response('', 200)
 
 
-@api.resource('/info/initialize')
+@api.resource('/info/initialize/<email>')
 class InitializeInfo(BaseResource):
-    @json_required({'email': str, 'nickname': str, 'categories': list})
-    def post(self):
+    @swag_from(INITIALIZE_INFO_POST)
+    @json_required({'nickname': str, 'categories': list})
+    def post(self, email):
         """
         기본 정보 업로드(초기화)
         """
         payload = request.json
 
-        email = payload['email']
         nickname = payload['nickname']
         categories = payload['categories']
 
         user = AccountModel.objects(email=email).first()
+
+        if not user.email_certified:
+            abort(401)
 
         if not user:
             return Response('', 204)
@@ -125,13 +133,13 @@ class InitializeInfo(BaseResource):
         user.nickname = nickname
 
         for category_id in categories:
-            major_category = MajorInterestModel.objects(id=category_id).first()
-            minor_category = MinorInterestModel.objects(id=category_id).first()
+            major_interest = MajorInterestModel.objects(id=category_id).first()
+            minor_interest = MinorInterestModel.objects(id=category_id).first()
 
-            if major_category:
-                user.major_category_interests.append(major_category)
-            elif minor_category:
-                user.minor_category_interests.append(minor_category)
+            if major_interest:
+                user.major_category_interests.append(major_interest)
+            elif minor_interest:
+                user.minor_category_interests.append(minor_interest)
             else:
                 abort(400)
 
