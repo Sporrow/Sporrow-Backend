@@ -2,6 +2,8 @@ from uuid import uuid4
 
 from mongoengine import *
 
+from app.models.interest import MajorInterestModel, MinorInterestModel
+
 
 class AccountModel(Document):
     meta = {
@@ -24,14 +26,14 @@ class AccountModel(Document):
 
     major_category_interests = ListField(
         ReferenceField(
-            document_type='MajorInterestModel',
+            document_type=MajorInterestModel,
             required=True
         )
     )
 
     minor_category_interests = ListField(
         ReferenceField(
-            document_type='MinorInterestModel',
+            document_type=MinorInterestModel,
             required=True
         )
     )
@@ -44,7 +46,7 @@ class TokenModel(Document):
     }
 
     owner = ReferenceField(
-        document_type='AccountModel',
+        document_type=AccountModel,
         primary_key=True,
         reverse_delete_rule=CASCADE
     )
@@ -75,13 +77,13 @@ class TokenModel(Document):
 
 class AccessTokenModel(TokenModel):
     meta = {
-        'collection': 'access_token'
+        'collection': 'token_access'
     }
 
 
 class RefreshTokenModel(TokenModel):
     meta = {
-        'collection': 'refresh_token'
+        'collection': 'token_refresh'
     }
 
     pw_snapshot = StringField(
