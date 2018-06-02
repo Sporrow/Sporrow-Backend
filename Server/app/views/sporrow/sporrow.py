@@ -45,7 +45,8 @@ class SporrowList(BaseResource):
             'borrowPrice': sporrow.borrow_price_per_day,
             'includeWeekend': sporrow.include_weekend_on_price_calculation,
             'tradeArea': sporrow.trade_area,
-            'cartCount': len(sporrow.in_cart)
+            'cartCount': len(sporrow.in_cart),
+            'inMyCart': g.user in sporrow.in_cart
         } for sporrow in SporrowModel.objects.order_by(self.sort_type_args_mapping[sort_type])[(page - 1) * self.pagination_count:page * self.pagination_count]])
 
     @auth_required(AccountModel)
@@ -129,6 +130,7 @@ class SporrowContent(BaseResource):
             'title': sporrow.title,
             'owner': sporrow.owner.nickname,
             'cartCount': len(sporrow.in_cart),
+            'inMyCart': g.user in sporrow.in_cart,
             'borrowPrice': sporrow.borrow_price_per_day,
             'tradeStartHour': sporrow.trade_start_hour,
             'tradeEndHour': sporrow.trade_end_hour,
