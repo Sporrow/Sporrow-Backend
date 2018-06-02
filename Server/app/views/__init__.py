@@ -178,5 +178,8 @@ class Router:
         app.register_error_handler(Exception, exception_handler)
 
         from app.views.account import auth, signup
+        from app.views.sporrow import sporrow,sporrow_request
         app.register_blueprint(auth.api.blueprint)
         app.register_blueprint(signup.api.blueprint)
+        app.register_blueprint(sporrow.api.blueprint)
+        app.register_blueprint(sporrow_request.api.blueprint)
