@@ -89,3 +89,36 @@ class SporrowModel(Document):
             required=True
         )
     )
+
+    borrow_calendar = DictField()
+
+
+class SporrowRequestModel(Document):
+    meta = {
+        'collection': 'sporrow_request'
+    }
+
+    requester = ReferenceField(
+        document_type=AccountModel,
+        required=True
+    )
+
+    borrow_start_date = StringField(
+        required=True
+    )
+
+    borrow_end_date = StringField(
+        required=True
+    )
+
+    trade_area = StringField(
+        required=True
+    )
+
+    trade_date = StringField(
+        required=True
+    )
+
+    trade_time = StringField(
+        required=True
+    )
