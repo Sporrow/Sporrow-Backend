@@ -110,3 +110,29 @@ class SporrowList(BaseResource):
 
         return Response('', 201)
 
+
+@api.resource('/sporrow/<id>')
+class SporrowContent(BaseResource):
+    def get(self, id):
+        """
+        스포츠용품 대여의 세부 정보 조회
+        """
+        if len(id) != 24:
+            return Response('', 204)
+
+        sporrow = SporrowModel.objects(id=id).first()
+
+        if not sporrow:
+            return Response('', 204)
+
+        return self.unicode_safe_json_dumps({
+            'title': sporrow.title,
+            'owner': sporrow.owner.nickname,
+            'cartCount': len(sporrow.in_cart),
+            'borrowPrice': sporrow.borrow_price_per_day,
+            'tradeStartHour': sporrow.trade_start_hour,
+            'tradeEndHour': sporrow.trade_end_hour,
+            'tradeArea': sporrow.trade_area,
+            'includeWeekend': sporrow.include_weekend_on_price_calculation
+        })
+
