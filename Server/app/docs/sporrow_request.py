@@ -121,7 +121,7 @@ SPORROW_REQUEST_GET= {
         }
     }
 }
-SPORROW_REQUEST_DETAIL_GWT= {
+SPORROW_REQUEST_DETAIL_GET= {
     'tags':['제안'],
     'description': '특정 대여 신청의 세부 정보 조회',
     'parameters': [

@@ -96,6 +96,7 @@ class SporrowRequest(BaseResource):
 @api.resource('/sporrow/request/detail/<id>')
 class SporrowRequestDetail(BaseResource):
     @auth_required(AccountModel)
+    @swag_from(SPORROW_REQUEST_DETAIL_GET)
     def get(self, id):
         """
         특정 제안의 세부 정보 조회
