@@ -3,14 +3,16 @@ from app.docs import SAMPLE_ACCESS_TOKEN, SAMPLE_REFRESH_TOKEN
 CHECK_EMAIL_IS_CERTIFIED_GET = {
     'tags': ['로그인'],
     'description': '해당 이메일이 인증된 이메일인지 체크합니다',
-    'parameters': {
-        'name': 'email',
-        'description': '체크할 이메일',
-        'in': 'path',
-        'type': 'str',
-        'required': True
-    },
-    'response': {
+    'parameters': [
+        {
+            'name': 'email',
+            'description': '체크할 이메일',
+            'in': 'path',
+            'type': 'str',
+            'required': True
+        }
+    ],
+    'responses': {
         '200': {
             'description': '인증된 이메일 입니다'
         },
@@ -39,7 +41,7 @@ AUTH_POST = {
             'required': True
         }
     ],
-    'response': {
+    'responses': {
         '200': {
             'description': '로그인 성공',
             'examples': {
@@ -73,10 +75,10 @@ REFRESH_GET = {
             'required': True
         }
     ],
-    'response': {
+    'responses': {
         '200': {
             'description': '토큰 재발급 성공',
-            'example': {
+            'examples': {
                 '': {
                     'accessToken': SAMPLE_ACCESS_TOKEN
                 }
