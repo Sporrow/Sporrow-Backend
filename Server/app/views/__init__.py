@@ -5,7 +5,7 @@ import time
 
 import ujson
 
-from flask import Response, abort, after_this_request, g, jsonify, request
+from flask import Response, abort, after_this_request, current_app, g, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_restful import Resource
 from werkzeug.exceptions import HTTPException
@@ -19,6 +19,20 @@ def after_request(response):
     """
     response.headers['X-Content-Type-Options'] = 'nosniff'
     response.headers['X-Frame-Options'] = 'deny'
+
+    current_app.config['INFLUXDB_CLIENT'].write_points([
+        {
+            'measurement': 'api_process_data',
+            'tags': {
+                'status': response.status,
+                'method': request.method,
+                'uri': request.path
+            },
+            'fields': {
+                'count': 1
+            }
+        }
+    ])
 
     return response
 
