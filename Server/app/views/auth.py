@@ -12,6 +12,11 @@ from werkzeug.security import check_password_hash
 
 api = Api(Blueprint(__name__, __name__))
 
+@api.resource('/is-certified/<email>')
+class CheakEmailIsCertified(BaseResource):
+    def get(self,email):
+        return Response('',200 if AccountModel.objects(email=email).first().email_certified else 204)
+
 
 @api.resource('/auth')
 class Auth(BaseResource):
