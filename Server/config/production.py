@@ -5,7 +5,7 @@ from config import Config
 
 class ProductionConfig(Config):
     HOST = socket.gethostbyname(socket.gethostname())
-    PORT = 80
+    PORT = 1026
     DEBUG = False
 
     RUN_SETTING = dict(Config.RUN_SETTING, **{
