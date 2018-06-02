@@ -17,6 +17,7 @@ class AccountModel(Document):
     email_certified = BooleanField(
         default=False
     )
+    # 이메일 인증 여부
 
     pw = StringField(
         required=True
@@ -30,6 +31,7 @@ class AccountModel(Document):
             required=True
         )
     )
+    # 관심사(1차 카테고리)
 
     minor_interests = ListField(
         ReferenceField(
@@ -37,6 +39,7 @@ class AccountModel(Document):
             required=True
         )
     )
+    # 관심사(2차 카테고리)
 
 
 class TokenModel(Document):

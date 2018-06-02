@@ -11,7 +11,20 @@ from app.views import BaseResource, auth_required, json_required
 api = Api(Blueprint(__name__, __name__))
 
 
-@api.resource('/sporrow/<id>/request')
+@api.resource('/sporrow/request')
+class SporrowRequestList(BaseResource):
+    @auth_required(AccountModel)
+    def get(self):
+        """
+        자신이 올린 모든 대여에 대한 제안 상태 조회
+        """
+        return self.unicode_safe_json_dumps([{
+            'id': str(sporrow.id),
+            'requestCount': SporrowRequestModel.objects(sporrow=sporrow).count()
+        } for sporrow in SporrowModel.objects(owner=g.user)])
+
+
+@api.resource('/sporrow/request/<id>')
 class SporrowRequest(BaseResource):
     @auth_required(AccountModel)
     @json_required({'borrowStartDate': str, 'borrowEndDate': str, 'tradeArea': str, 'tradeDate': str, 'tradeTime': str})
@@ -55,7 +68,7 @@ class SporrowRequest(BaseResource):
     @auth_required(AccountModel)
     def get(self, id):
         """
-        특정 대여의 제안 상태 조회
+        특정 대여의 제안 상태(제안자 목록)조회
         """
         if len(id) != 24:
             return Response('', 204)
@@ -69,7 +82,35 @@ class SporrowRequest(BaseResource):
             abort(403)
 
         return self.unicode_safe_json_dumps([{
+            'id': str(req.id),
             'nickname': req.requester.nickname,
             'borrowStartDate': req.borrow_start_date,
             'borrowEndDate': req.borrow_end_date
         } for req in SporrowRequestModel.objects(sporrow=sporrow)])
+
+
+@api.resource('/sporrow/request/detail/<id>')
+class SporrowRequestDetail(BaseResource):
+    @auth_required(AccountModel)
+    def get(self, id):
+        """
+        특정 제안의 세부 정보 조회
+        """
+        if len(id) != 24:
+            return Response('', 204)
+
+        req = SporrowRequestModel.objects(id=id).first()
+
+        if not req:
+            return Response('', 204)
+
+        if req.sporrow.owner != g.owner:
+            abort(403)
+
+        return self.unicode_safe_json_dumps({
+            'borrowStartDate': req.borrow_start_date,
+            'borrowEndDate': req.borrow_end_date,
+            'tradeDate': req.trade_date,
+            'tradeTime': req.trade_time,
+            'tradeArea': req.area
+        })
