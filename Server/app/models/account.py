@@ -8,8 +8,12 @@ class AccountModel(Document):
         'collection': 'account'
     }
 
-    id = StringField(
+    email = StringField(
         primary_key=True
+    )
+
+    email_certified = BooleanField(
+        default=False
     )
 
     pw = StringField(
