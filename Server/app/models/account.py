@@ -22,6 +22,20 @@ class AccountModel(Document):
 
     nickname = StringField()
 
+    major_category_interests = ListField(
+        ReferenceField(
+            document_type='MajorInterestModel',
+            required=True
+        )
+    )
+
+    minor_category_interests = ListField(
+        ReferenceField(
+            document_type='MinorInterestModel',
+            required=True
+        )
+    )
+
 
 class TokenModel(Document):
     meta = {

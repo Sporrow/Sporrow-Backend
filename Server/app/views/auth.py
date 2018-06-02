@@ -29,6 +29,9 @@ class Auth(BaseResource):
                 if not user.email_certified:
                     return Response('', 204)
 
+                elif not all([user.nickname, user.major_category_interests or user.minor_category_interests]):
+                    return Response('', 205)
+
                 return {
                     'accessToken': create_access_token(TokenModel.generate_token(AccessTokenModel, user)),
                     'refreshToken': create_refresh_token(TokenModel.generate_token(RefreshTokenModel, user))
