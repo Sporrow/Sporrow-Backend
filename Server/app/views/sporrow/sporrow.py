@@ -1,3 +1,5 @@
+from calendar import monthrange
+from datetime import datetime
 import re
 
 from flask import Blueprint, Response, abort, g, request
@@ -137,4 +139,37 @@ class SporrowContent(BaseResource):
             'tradeArea': sporrow.trade_area,
             'includeWeekend': sporrow.include_weekend_on_price_calculation
         })
+
+
+@api.resource('/sporrow/<id>/calendar/<int:year>/<int:month>')
+class SporrowCalendar(BaseResource):
+    def __init__(self):
+        self.date_format = '{}-{:0>2}-{:0>2}'
+        self.date_format_without_year = '{:0>2}-{:0>2}'
+
+        super(SporrowCalendar, self).__init__()
+
+    def get(self, id, year, month):
+        """
+        스포츠용품 대여의 달력 조회
+        """
+        if len(id) != 24:
+            return Response('', 204)
+
+        sporrow = SporrowModel.objects(id=id).first()
+
+        if not sporrow:
+            return Response('', 204)
+
+        if year < datetime.now().year or\
+                (year == datetime.now().year and month < datetime.now().month):
+            abort(400)
+
+        last_day_of_month = monthrange(year, month)[1]
+
+        return [{
+            self.date_format_without_year.format(month, day): 1 if self.date_format.format(year, month, day) not in sporrow.borrow_calendar else 0
+        } for day in range(1, last_day_of_month + 1)]
+        # 1 : 대여 가능한 날
+        # 0 : 대여 불가능한 날
 
