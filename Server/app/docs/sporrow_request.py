@@ -17,7 +17,7 @@ SPORROW_REQUEST_LIST_GET={
             'description': '모든 대여에 대한 상태를 반환해줌',
             'examples': {
                 '': {
-                    'id': SAMPLE_OBJECT_IDS[3],
+                    'id': SAMPLE_OBJECT_IDS[1],
                     'requestCount': 5
                 }
             }
