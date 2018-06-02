@@ -14,13 +14,13 @@ class InterestBase(Document):
 
 class MajorInterestModel(InterestBase):
     meta = {
-        'interest_major'
+        'collection': 'interest_major'
     }
 
 
 class MinorInterestModel(InterestBase):
     meta = {
-        'interest_minor'
+        'collection': 'interest_minor'
     }
 
     parent_interest = ReferenceField(

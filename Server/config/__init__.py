@@ -63,8 +63,12 @@ class Config:
         ],
         'tags': [
             {
-                'name': 'Some Tag',
-                'description': 'Some API'
+                'name': '로그인',
+                'description': '로그인 관련 API'
             },
+            {
+                'name': '회원가입',
+                'description': '회원가입 관련 API'
+            }
         ]
     }

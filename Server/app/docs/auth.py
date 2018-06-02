@@ -1,5 +1,5 @@
 CHECK_EMAIL_IS_CERTIFIED_GET={
-    'tags':['[Auth] 이메일 인증 체크'],
+    'tags':['로그인'],
     'description':'해당 이메일이 인증된 이메일인지 체크합니다',
     'parameters':'email',
     'response':{
@@ -12,7 +12,7 @@ CHECK_EMAIL_IS_CERTIFIED_GET={
     }
 }
 AUTH_POST={
-    'tags':['[Auth] 로그인'],
+    'tags':['로그인'],
     'description':'유저 로그인',
     'parameters':[
         {
@@ -50,7 +50,7 @@ AUTH_POST={
     }
 }
 REFRESH_GET={
-    'tags':['[Auth] 토근 재발급'],
+    'tags':['로그인'],
     'description':'토큰을 재발급합니다',
     'parameters':[
         {
