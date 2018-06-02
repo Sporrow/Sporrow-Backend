@@ -202,6 +202,13 @@ SPORROW_CALENDAR_GET={
     'description': '해당 용품의 대여 가능 여부 상태를 담은 캘린더를 반환해줌',
     'parameters': [
         {
+            'name': 'Authorization',
+            'description': 'JWT Token(JWT ***)',
+            'in': 'header',
+            'type': 'str',
+            'required': True
+        },
+        {
             'name': 'id',
             'description': '페이지 번호',
             'in': 'path',
@@ -223,8 +230,8 @@ SPORROW_CALENDAR_GET={
             'required': True
         }
     ],
-    'responses':{
-        '200':{
+    'responses': {
+        '200': {
             'description': '캘린더 반환해줌',
             'examples': {
                 '': {

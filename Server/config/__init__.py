@@ -69,6 +69,10 @@ class Config:
             {
                 'name': '회원가입',
                 'description': '회원가입 관련 API'
+            },
+            {
+                'name':'대여',
+                'description': '대여 관련 API'
             }
         ]
     }
