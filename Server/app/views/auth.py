@@ -38,3 +38,19 @@ class Auth(BaseResource):
         else:
             abort(401)
 
+
+@api.resource('/refresh')
+class Refresh(BaseResource):
+    @jwt_refresh_token_required
+    def get(self):
+        refresh_token = RefreshTokenModel.objects(identity=UUID(get_jwt_identity())).first()
+
+        if refresh_token:
+            if refresh_token.pw_snapshot == refresh_token.owner.pw:
+                return {
+                    'accessToken': create_refresh_token(TokenModel.generate_token(AccessTokenModel, refresh_token.owner))
+                }
+            else:
+                return Response('', 205)
+        else:
+            abort(401)
