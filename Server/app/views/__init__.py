@@ -1,4 +1,5 @@
 from functools import wraps
+from uuid import UUID
 import gzip
 import time
 
@@ -8,6 +9,8 @@ from flask import Response, abort, after_this_request, g, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_restful import Resource
 from werkzeug.exceptions import HTTPException
+
+from app.models.account import AccessTokenModel
 
 
 def after_request(response):
@@ -74,9 +77,13 @@ def auth_required(model):
         @wraps(fn)
         @jwt_required
         def wrapper(*args, **kwargs):
-            raise NotImplementedError()
+            token = AccessTokenModel.objects(identity=UUID(get_jwt_identity())).first()
+            if not token or not isinstance(token.owner, model):
+                abort(403)
 
-            # return fn(*args, **kwargs)
+            g.user = token.owner
+
+            return fn(*args, **kwargs)
         return wrapper
     return decorator
 
