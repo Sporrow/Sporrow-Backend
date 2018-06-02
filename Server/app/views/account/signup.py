@@ -137,9 +137,9 @@ class InitializeInfo(BaseResource):
             minor_interest = MinorInterestModel.objects(id=category_id).first()
 
             if major_interest:
-                user.major_category_interests.append(major_interest)
+                user.major_interests.append(major_interest)
             elif minor_interest:
-                user.minor_category_interests.append(minor_interest)
+                user.minor_interests.append(minor_interest)
             else:
                 abort(400)
 

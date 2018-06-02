@@ -40,7 +40,7 @@ class Auth(BaseResource):
                 if not user.email_certified:
                     return Response('', 204)
 
-                elif not all((user.nickname, user.major_category_interests or user.minor_category_interests)):
+                elif not all((user.nickname, user.major_interests or user.minor_interests)):
                     return Response('', 205)
 
                 return {
