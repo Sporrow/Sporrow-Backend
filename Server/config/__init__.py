@@ -71,8 +71,12 @@ class Config:
                 'description': '회원가입 관련 API'
             },
             {
-                'name':'대여',
+                'name': '대여',
                 'description': '대여 관련 API'
+            },
+            {
+                'name': '제안',
+                'description': '제안 관련 API'
             }
         ]
     }
