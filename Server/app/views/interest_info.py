@@ -26,20 +26,24 @@ class InterestList(BaseResource):
         major_interest_count = size // 3
         minor_interest_count = size - major_interest_count
 
-        interests = []
+        return self.unicode_safe_json_dumps([{
+            'id': str(interest.id),
+            'name': interest.name
+        } for interest in random.shuffle(MajorInterestModel.objects[:major_interest_count] + MinorInterestModel.objects[:minor_interest_count])])
 
-        interests += [
-            {
-                'id': str(interest.id),
-                'name': interest.name
-            } for interest in random.shuffle(MajorInterestModel.objects[:major_interest_count])
-        ]
 
-        interests += [
-            {
-                'id': str(interest.id),
-                'name': interest.name
-            } for interest in random.shuffle(MinorInterestModel.objects[:minor_interest_count])
-        ]
+@api.resource('/interest-list/<keyword>')
+class InterestListSearch(BaseResource):
+    def get(self, keyword):
+        """
+        관심사 리스트 검색
+        """
+        if not keyword:
+            abort(400)
 
-        return self.unicode_safe_json_dumps(interests)
+        regex = re.compile('.*{}.*'.format(keyword))
+
+        return self.unicode_safe_json_dumps([{
+            'id': str(interest.id),
+            'name': interest.name
+        } for interest in random.shuffle(MajorInterestModel.objects(name=regex) + MinorInterestModel.objects(name=regex))])
