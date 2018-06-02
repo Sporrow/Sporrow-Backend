@@ -24,6 +24,8 @@ class SporrowModel(Document):
         required=True
     )
 
+    pictures = ListField()
+
     borrow_price_per_day = IntField(
         required=True
     )
@@ -32,12 +34,26 @@ class SporrowModel(Document):
         required=True
     )
 
-    trade_start_time_hour = IntField(
-        required=True
+    min_borrow_days = IntField(
+        required=True,
+        min_value=1
     )
 
-    trade_end_time_hour = IntField(
-        required=True
+    max_borrow_days = IntField(
+        required=True,
+        min_value=1
+    )
+
+    trade_start_hour = IntField(
+        required=True,
+        min_value=0,
+        max_value=24
+    )
+
+    trade_end_hour = IntField(
+        required=True,
+        min_value=0,
+        max_value=24
     )
 
     trade_area = StringField(
@@ -62,6 +78,13 @@ class SporrowModel(Document):
     minor_interests = ListField(
         ReferenceField(
             document_type=MinorInterestModel,
+            required=True
+        )
+    )
+
+    in_cart = ListField(
+        ReferenceField(
+            document_type=AccountModel,
             required=True
         )
     )
