@@ -19,7 +19,7 @@ api = Api(Blueprint(__name__, __name__))
 
 
 def generate_email_certification_code(email):
-    redis_client: Redis = current_app.config['REDIS_CLIENT']
+    redis_client = current_app.config['REDIS_CLIENT']
 
     while True:
         code = ''.join(random.choice(ascii_uppercase + digits) for _ in range(12))
@@ -59,7 +59,7 @@ class Signup(BaseResource):
         if AccountModel.objects(email=email):
             return Response('', 409)
 
-        mail_client: Mail = current_app.config['MAIL_CLIENT']
+        mail_client = current_app.config['MAIL_CLIENT']
 
         code = generate_email_certification_code(email)
 
@@ -90,7 +90,7 @@ class EmailResend(BaseResource):
         if not AccountModel.objects(email=email):
             return Response('', 204)
 
-        mail_client: Mail = current_app.config['MAIL_CLIENT']
+        mail_client = current_app.config['MAIL_CLIENT']
 
         code = generate_email_certification_code(email)
 
@@ -154,7 +154,7 @@ class EmailCertify(BaseResource):
         """
         이메일 인증 URL
         """
-        redis_client: Redis = current_app.config['REDIS_CLIENT']
+        redis_client = current_app.config['REDIS_CLIENT']
 
         email = redis_client.get(code)
 
