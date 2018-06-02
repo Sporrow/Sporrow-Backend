@@ -9,8 +9,6 @@ from mongoengine import connect
 
 from app.views import Router
 
-WEB_FILE_ROOT_DIR = '../web_files'
-
 
 def create_app(*config_cls):
     """
@@ -21,11 +19,7 @@ def create_app(*config_cls):
     """
     print('[INFO] Flask application initialized with {}'.format([config.__name__ for config in config_cls]))
 
-    app_ = Flask(
-        __name__,
-        # static_folder='{}/static'.format(WEB_FILE_ROOT_DIR),
-        # template_folder='{}/templates'.format(WEB_FILE_ROOT_DIR)
-    )
+    app_ = Flask(__name__)
 
     for config in config_cls:
         app_.config.from_object(config)
