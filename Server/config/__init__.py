@@ -3,7 +3,7 @@ import os
 
 
 class Config:
-    SERVICE_NAME = 'Flask_Large_Application_Example'
+    SERVICE_NAME = 'Sporrow'
     SERVICE_NAME_UPPER = SERVICE_NAME.upper()
     REPRESENTATIVE_HOST = None
 
@@ -17,6 +17,9 @@ class Config:
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=30)
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=365)
     JWT_HEADER_TYPE = 'JWT'
+
+    MAIL_SERVER, MAIL_PORT = 'smtp.gmail.com', 587
+    MAIL_USERNAME, MAIL_PASSWORD, MAIL_USE_TLS = 'sporrow33', 'uursty199', True
 
     MONGODB_SETTINGS = {
         'host': None,
